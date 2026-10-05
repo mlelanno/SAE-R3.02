@@ -7,9 +7,29 @@ from PySide6.QtCore import QTimer, Qt, QPointF
 # On importe les donnees du carrefour extraites par le script
 from donnees_couleurs import DONNEES
 
+import math
+
+class FeuTricolore:
+    def __init__(self, scene, x, y, axe):
+        self.axe = axe # 1 pour Horizontal, 2 pour Vertical
+        self.etat = "ROUGE"
+
+        # Dessin basique du feu : un cercle avec un contour
+        self.cercle = QGraphicsEllipseItem(x - 15, y - 15, 30, 30)
+        self.cercle.setPen(QPen(Qt.black, 3))
+        scene.addItem(self.cercle)
+        self.mettre_a_jour_couleur()
+
+    def mettre_a_jour_couleur(self):
+        if self.etat == "VERT":
+            self.cercle.setBrush(QBrush(QColor("green")))
+        else:
+            self.cercle.setBrush(QBrush(QColor("red")))
+
 class Vehicule:
     def __init__(self, scene, trajet, est_urgence=False):
         self.est_urgence = est_urgence
+        self.trajet_numero = trajet['numero']
 
         # Le vehicule est un simple rectangle
         self.rect = QGraphicsRectItem(-10, -5, 20, 10)
@@ -97,10 +117,38 @@ class Simulation(QMainWindow):
         self.timer_animation.timeout.connect(self.animer)
         self.timer_animation.start(30) # 30 ms
 
+        # Ajouter les feux tricolores
+        self.feux = []
+        # Positions approximatives des feux basées sur les lignes d'arrêt
+        self.feux.append(FeuTricolore(self.scene, 560, 620, axe=1))   # Ouest (Axe Horizontal)
+        self.feux.append(FeuTricolore(self.scene, 1230, 710, axe=1))  # Est (Axe Horizontal)
+        self.feux.append(FeuTricolore(self.scene, 930, 410, axe=2))   # Nord (Axe Vertical)
+        self.feux.append(FeuTricolore(self.scene, 810, 980, axe=2))   # Sud (Axe Vertical)
+
+        self.cycle_feux = 1 # 1 = Horizontal Vert, 2 = Vertical Vert
+        self.timer_feux = QTimer()
+        self.timer_feux.timeout.connect(self.changer_feux)
+        self.timer_feux.start(5000) # Changer de feux toutes les 5 secondes
+        self.changer_feux() # Initialiser
+
         # Timer pour ajouter de nouvelles voitures
         self.timer_ajout = QTimer()
         self.timer_ajout.timeout.connect(self.ajouter_vehicule)
         self.timer_ajout.start(2000) # Toutes les 2 secondes
+
+    def changer_feux(self, urgence_axe=None):
+        if urgence_axe:
+            self.cycle_feux = urgence_axe
+            self.timer_feux.start(5000) # Redémarrer le timer normal
+        else:
+            self.cycle_feux = 2 if self.cycle_feux == 1 else 1
+
+        for feu in self.feux:
+            if feu.axe == self.cycle_feux:
+                feu.etat = "VERT"
+            else:
+                feu.etat = "ROUGE"
+            feu.mettre_a_jour_couleur()
 
     def ajouter_vehicule(self):
         trajets = DONNEES['trajets']
@@ -113,18 +161,64 @@ class Simulation(QMainWindow):
         self.vehicules.append(nouveau_vehicule)
 
     def animer(self):
-        # 1. Verifier s'il y a un vehicule d'urgence dans le carrefour
+        # 1. Gestion anti-collision très simple :
+        # Si une voiture est trop proche d'une autre devant elle ou dans le carrefour, elle s'arrête
+        voitures_a_arreter = set()
+        for i, v1 in enumerate(self.vehicules):
+            if v1.fini: continue
+            for j, v2 in enumerate(self.vehicules):
+                if i == j or v2.fini: continue
+
+                # Calculer la distance entre v1 et v2
+                pos1 = v1.rect.pos()
+                pos2 = v2.rect.pos()
+                distance = math.hypot(pos1.x() - pos2.x(), pos1.y() - pos2.y())
+
+                if distance < 40: # Distance de sécurité
+                    # Si trop proche, celui qui a la progression la plus faible s'arrête
+                    if v1.progression < v2.progression:
+                        voitures_a_arreter.add(v1)
+                    else:
+                        voitures_a_arreter.add(v2)
+
+        # 2. Verifier s'il y a un vehicule d'urgence dans le carrefour et forcer les feux
         urgence_en_cours = False
+        axe_urgence = None
         for v in self.vehicules:
             if v.est_urgence and not v.fini:
                 urgence_en_cours = True
+                # Déterminer l'axe de l'urgence basé sur son point de départ
+                if v.trajet_numero in [1, 2, 3, 4, 5, 6]: # Ouest et Est -> Axe Horizontal 1
+                    axe_urgence = 1
+                elif v.trajet_numero in [7, 8, 9, 10, 11, 12]: # Nord et Sud -> Axe Vertical 2
+                    axe_urgence = 2
                 break
 
-        # 2. Faire avancer toutes les voitures en leur disant s'il y a une urgence
-        for v in self.vehicules:
-            v.avancer(urgence_en_cours)
+        if urgence_en_cours and axe_urgence:
+            self.changer_feux(urgence_axe=axe_urgence)
 
-        # 3. Supprimer les voitures arrivees
+        # 3. Faire avancer toutes les voitures en leur disant s'il y a une urgence
+        for v in self.vehicules:
+            # On vérifie aussi si on est au rouge
+            doit_sarreter = False
+
+            # Arrêt pour anti-collision
+            if v in voitures_a_arreter and not v.est_urgence:
+                doit_sarreter = True
+
+            # Arrêt au feu rouge : on regarde si on est au tout début du trajet
+            if v.progression < 0.1: # Proche de l'entrée
+                axe_vehicule = 1 if v.trajet_numero in [1,2,3,4,5,6] else 2
+                if axe_vehicule != self.cycle_feux: # Si notre axe est au rouge
+                    doit_sarreter = True
+
+            if doit_sarreter and not v.est_urgence:
+                # On force la voiture à ne pas avancer ce tour-ci
+                pass
+            else:
+                v.avancer(urgence_en_cours)
+
+        # 4. Supprimer les voitures arrivees
         vehicules_restants = []
         for v in self.vehicules:
             if v.fini:
