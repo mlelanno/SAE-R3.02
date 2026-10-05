@@ -13,18 +13,27 @@ class FeuTricolore:
     def __init__(self, scene, x, y, axe):
         self.axe = axe # 1 pour Horizontal, 2 pour Vertical
         self.etat = "ROUGE"
+        self.x = x
+        self.y = y
 
-        # Dessin basique du feu : un cercle avec un contour
-        self.cercle = QGraphicsEllipseItem(x - 15, y - 15, 30, 30)
-        self.cercle.setPen(QPen(Qt.black, 3))
-        scene.addItem(self.cercle)
+        # Dessin plus joli : un petit boitier gris foncé
+        self.boitier = QGraphicsRectItem(x - 10, y - 20, 20, 40)
+        self.boitier.setBrush(QBrush(QColor(50, 50, 50)))
+        scene.addItem(self.boitier)
+
+        # Lumière du feu
+        self.lumiere = QGraphicsEllipseItem(x - 6, y - 16, 12, 12)
+        scene.addItem(self.lumiere)
+
         self.mettre_a_jour_couleur()
 
     def mettre_a_jour_couleur(self):
         if self.etat == "VERT":
-            self.cercle.setBrush(QBrush(QColor("green")))
+            self.lumiere.setBrush(QBrush(QColor(0, 255, 0)))
+            self.lumiere.setPos(0, 20) # Descendre la lumière pour le vert
         else:
-            self.cercle.setBrush(QBrush(QColor("red")))
+            self.lumiere.setBrush(QBrush(QColor(255, 0, 0)))
+            self.lumiere.setPos(0, 0) # Monter la lumière pour le rouge
 
 class Vehicule:
     def __init__(self, scene, trajet, est_urgence=False):
@@ -69,15 +78,11 @@ class Vehicule:
         # On tourne la voiture pour qu'elle suive la route (angle negatif car Qt va a l'envers)
         self.rect.setRotation(-angle)
 
-    def avancer(self, urgence_en_cours):
+    def avancer(self):
         if self.fini:
             return
 
-        # Si c'est une voiture normale et qu'il y a une urgence, elle s'arrete !
-        if not self.est_urgence and urgence_en_cours:
-            return
-
-        # Sinon la voiture avance
+        # La voiture avance simplement (la logique d'arrêt est gérée dans la boucle principale)
         self.progression += self.vitesse
         if self.progression >= 1.0:
             self.progression = 1.0
@@ -119,11 +124,11 @@ class Simulation(QMainWindow):
 
         # Ajouter les feux tricolores
         self.feux = []
-        # Positions approximatives des feux basées sur les lignes d'arrêt
-        self.feux.append(FeuTricolore(self.scene, 560, 620, axe=1))   # Ouest (Axe Horizontal)
-        self.feux.append(FeuTricolore(self.scene, 1230, 710, axe=1))  # Est (Axe Horizontal)
-        self.feux.append(FeuTricolore(self.scene, 930, 410, axe=2))   # Nord (Axe Vertical)
-        self.feux.append(FeuTricolore(self.scene, 810, 980, axe=2))   # Sud (Axe Vertical)
+        # Positions ajustées d'après les numéros sur le plan (coordonnées des petits boîtiers dessinés sur la carte)
+        self.feux.append(FeuTricolore(self.scene, 465, 380, axe=1))   # Feu 6 (Ouest)
+        self.feux.append(FeuTricolore(self.scene, 1200, 550, axe=1))  # Feu 8 (Est)
+        self.feux.append(FeuTricolore(self.scene, 535, 625, axe=2))   # Feu 1 (Nord, position visuelle gauche)
+        self.feux.append(FeuTricolore(self.scene, 875, 870, axe=2))   # Feu 5 (Sud)
 
         self.cycle_feux = 1 # 1 = Horizontal Vert, 2 = Vertical Vert
         self.timer_feux = QTimer()
@@ -206,8 +211,22 @@ class Simulation(QMainWindow):
             if v in voitures_a_arreter and not v.est_urgence:
                 doit_sarreter = True
 
-            # Arrêt au feu rouge : on regarde si on est au tout début du trajet
-            if v.progression < 0.1: # Proche de l'entrée
+            # Arrêt au feu rouge en vérifiant si la voiture est dans une "zone d'arrêt"
+            # On définit une zone juste avant les feux où les voitures doivent s'arrêter au rouge
+            pos = v.rect.pos()
+            dans_zone_arret = False
+
+            # Vérifications très simples basées sur la position (X,Y) sur la carte
+            if v.trajet_numero in [1,2,3]: # Ouest vers le reste
+                if 480 < pos.x() < 550: dans_zone_arret = True
+            elif v.trajet_numero in [4,5,6]: # Est vers le reste
+                if 1250 < pos.x() < 1320: dans_zone_arret = True
+            elif v.trajet_numero in [7,8,9]: # Nord vers le reste
+                if 350 < pos.y() < 420: dans_zone_arret = True
+            elif v.trajet_numero in [10,11,12]: # Sud vers le reste
+                if 880 < pos.y() < 950: dans_zone_arret = True
+
+            if dans_zone_arret:
                 axe_vehicule = 1 if v.trajet_numero in [1,2,3,4,5,6] else 2
                 if axe_vehicule != self.cycle_feux: # Si notre axe est au rouge
                     doit_sarreter = True
@@ -216,7 +235,7 @@ class Simulation(QMainWindow):
                 # On force la voiture à ne pas avancer ce tour-ci
                 pass
             else:
-                v.avancer(urgence_en_cours)
+                v.avancer()
 
         # 4. Supprimer les voitures arrivees
         vehicules_restants = []
