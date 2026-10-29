@@ -25,7 +25,9 @@ Dans VirtualBox, chaque VM dispose de deux cartes :
 
 Activer « Câble branché » pour les deux cartes et utiliser le même nom de réseau interne sur les deux VM.
 
-**Si les adresses sont fournies par l’organisateur ou si les VM sont déjà configurées sur Proxmox, conserver cette configuration et passer les étapes de configuration réseau ci-dessous.** Les noms `enp0s3` et `enp0s8` sont ceux de notre exemple VirtualBox ; vérifier les noms réels avec `ip -br address`.
+**Sur Proxmox, ne pas réaliser l’étape 2A de configuration réseau, sur aucune des deux VM.** Conserver la configuration réseau fournie et passer directement à [l’installation des dépendances sur Carrefour](#2b-installer-les-dépendances-sur-carrefour), puis au lancement du client sur Véhicule. Ne pas modifier `/etc/network/interfaces`, désactiver NetworkManager ou appliquer les adresses d’exemple de cette notice.
+
+Si les adresses sont déjà fournies par l’organisateur dans un autre environnement, conserver également cette configuration et passer l’étape 2A. Les noms `enp0s3` et `enp0s8` sont ceux de notre exemple VirtualBox ; vérifier les noms réels avec `ip -br address`.
 
 ## 1 Utiliser les OVA
 
@@ -62,14 +64,16 @@ Télécharger les deux archives, puis les décompresser chacune dans la VM corre
 
 | Machine | Archive | Dossier obtenu |
 |---|---|---|
-| Carrefour | [VM Carrefour.zip](../ZIP/VM_Carrefour.zip) | `carrefour` |
-| Véhicule  | [VM Vehicule.zip](../ZIP/VM_Vehicule.zip)   | `vehicule`  |
+| Carrefour | [VM_Carrefour.zip](../ZIP/VM_Carrefour.zip?raw=1) | `carrefour` |
+| Véhicule | [VM_Vehicule.zip](../ZIP/VM_Vehicule.zip?raw=1) | `vehicule` |
 
 Les ZIP du dépôt sont ceux de la version décrite ici. Les liens ZIP de l’ancienne fiche PDF peuvent désigner une version antérieure : utiliser les liens du tableau ci-dessus.
 
-### 2A Configurer le réseau si nécessaire
+### 2A Configurer le réseau uniquement sur VirtualBox
 
-Cette étape concerne vos propres VM VirtualBox lorsque les adresses ne sont pas déjà imposées. L’exemple utilise `192.168.50.10` pour Carrefour et `192.168.50.20` pour Véhicule, avec le masque `255.255.255.0`.
+**Cette partie n’est pas à faire sur Proxmox, ni sur Carrefour ni sur Véhicule.** Dans ce cas, passer directement à [l’étape 2B](#2b-installer-les-dépendances-sur-carrefour).
+
+Cette étape concerne seulement vos propres VM VirtualBox lorsque les adresses ne sont pas déjà imposées. L’exemple utilise `192.168.50.10` pour Carrefour et `192.168.50.20` pour Véhicule, avec le masque `255.255.255.0`.
 
 Sur chaque VM, ouvrir un terminal et passer en administrateur :
 
