@@ -36,8 +36,8 @@ Le changement de mode ne déclenche pas d’ambulance. L’urgence est demandée
 
 | Ressource | Contenu | Accès |
 |---|---|---|
-| **ZIP Carrefour** | Simulation, plan SVG, images, trajectoires SQLite et dépendances | [Télécharger](ZIP/VM_Carrefour.zip?raw=1) |
-| **ZIP Véhicule** | Client d’urgence Python | [Télécharger](ZIP/VM_Vehicule.zip?raw=1) |
+| **ZIP Carrefour** | Simulation, plan SVG, images, trajectoires SQLite et dépendances | [Télécharger](/mlelanno/SAE-R3.02/raw/main/ZIP/VM_Carrefour.zip) |
+| **ZIP Véhicule** | Client d’urgence Python | [Télécharger](/mlelanno/SAE-R3.02/raw/main/ZIP/VM_Vehicule.zip) |
 | **Notice en ligne** | Réseau, installation et lancement des deux VM | [Lire la notice](installation/README.md) |
 | **Fiche PDF** | Support d’installation illustré | [Ouvrir le PDF](installation/Fiche_installation.pdf) |
 
