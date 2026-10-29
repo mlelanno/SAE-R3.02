@@ -62,8 +62,8 @@ Télécharger les deux archives, puis les décompresser chacune dans la VM corre
 
 | Machine | Archive | Dossier obtenu |
 |---|---|---|
-| Carrefour | [VM_Carrefour.zip](../ZIP/VM_Carrefour.zip?raw=1) | `carrefour` |
-| Véhicule | [VM_Vehicule.zip](../ZIP/VM_Vehicule.zip?raw=1) | `vehicule` |
+| Carrefour | [VM Carrefour.zip](../ZIP/VM_Carrefour.zip) | `carrefour` |
+| Véhicule  | [VM Vehicule.zip](../ZIP/VM_Vehicule.zip)   | `vehicule`  |
 
 Les ZIP du dépôt sont ceux de la version décrite ici. Les liens ZIP de l’ancienne fiche PDF peuvent désigner une version antérieure : utiliser les liens du tableau ci-dessus.
 
