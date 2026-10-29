@@ -31,7 +31,7 @@ Si les adresses sont déjà fournies par l’organisateur dans un autre environn
 
 ## 1 Utiliser les OVA
 
-Les images OVA sont hébergées sur votre Google Drive. La [fiche PDF](Fiche_installation.pdf) est le support prévu pour leurs liens ; les deux liens OVA restent à y ajouter. Pour une installation immédiate, utiliser la [méthode avec les ZIP](#2-installer-avec-les-zip).
+Les images OVA sont hébergées sur votre Google Drive. La [fiche PDF](Fiche_installation.pdf) est le support prévu pour leurs liens. Pour une installation immédiate, utiliser la [méthode avec les ZIP](#2-installer-avec-les-zip).
 
 Une fois les OVA récupérés, les importer dans VirtualBox et vérifier les deux cartes réseau avant de démarrer les VM.
 
