@@ -38,10 +38,10 @@ Le changement de mode ne déclenche pas d’ambulance. L’urgence est demandée
 |---|---|---|
 | **ZIP Carrefour** | Simulation, plan SVG, images, trajectoires SQLite et dépendances | [Télécharger](https://github.com/mlelanno/SAE-R3.02/raw/main/ZIP/VM_Carrefour.zip) |
 | **ZIP Véhicule**  | Client d’urgence Python                                           | [Télécharger](https://github.com/mlelanno/SAE-R3.02/raw/main/ZIP/VM_Vehicule.zip)  |
-| **Notice en ligne** | Réseau, installation et lancement des deux VM | [Lire la notice](installation/README.md) |
-| **Fiche PDF** | Support d’installation illustré | [Ouvrir le PDF](installation/Fiche_installation.pdf) |
+| **Notice GIT HUB** | Réseau, installation et lancement des deux VM | [Lire la notice](installation/README.md) |
+| **Fiche PDF** | Support d’installation PDF | [Ouvrir le PDF](installation/Fiche_installation.pdf) |
 
-Les OVA restent hébergés sur Google Drive et ne sont pas inclus dans ce dépôt. La fiche PDF est le support prévu pour leurs liens de téléchargement ; ces liens restent à y ajouter. L’installation à partir des deux ZIP est disponible dès maintenant.
+Les OVA restent hébergés sur Google Drive et ne sont pas inclus dans ce dépôt. La fiche PDF est le support prévu pour leurs liens de téléchargement. L’installation à partir des deux ZIP est disponible dès maintenant.
 
 ## Ce que fait la maquette
 
