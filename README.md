@@ -56,8 +56,6 @@ La liaison réseau représente le **V2I**, entre le véhicule et le carrefour. L
 
 ## Nos diagrammes UML
 
-Ces deux schémas ont été **dessinés à la main par le binôme**. Les photographies sont conservées telles qu’elles ont été fournies.
-
 ### Diagramme de classes
 
 ![Diagramme de classes réalisé à la main](UML/classes.png)
@@ -93,9 +91,3 @@ Les adresses écrites sur le schéma sont des **exemples de configuration**. Le 
 │   └── vehicule/                  Fichier du ZIP Véhicule
 └── docs/images/                   Illustrations et aperçu
 ```
-
-Les fichiers de `src/` sont identiques à ceux des deux ZIP. `resultats.db` est créé lors de l’utilisation et ignoré par Git pour conserver un dépôt sans essais personnels. La base `carrefour.db`, nécessaire au démarrage, est fournie.
-
-## Remerciements
-
-Merci aux services chargés de la topographie et de la voirie de la **Ville de Colmar** pour les plans transmis et leur aide dans la préparation de cette maquette.
