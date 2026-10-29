@@ -67,8 +67,6 @@ Télécharger les deux archives, puis les décompresser chacune dans la VM corre
 | Carrefour | [VM_Carrefour.zip](../ZIP/VM_Carrefour.zip) | `carrefour` |
 | Véhicule | [VM_Vehicule.zip](../ZIP/VM_Vehicule.zip) | `vehicule` |
 
-Les ZIP du dépôt sont ceux de la version décrite ici. Les liens ZIP de l’ancienne fiche PDF peuvent désigner une version antérieure : utiliser les liens du tableau ci-dessus.
-
 ### 2A Configurer le réseau uniquement sur VirtualBox
 
 **Cette partie n’est pas à faire sur Proxmox, ni sur Carrefour ni sur Véhicule.** Dans ce cas, passer directement à [l’étape 2B](#2b-installer-les-dépendances-sur-carrefour).
