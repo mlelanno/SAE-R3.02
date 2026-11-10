@@ -4,7 +4,7 @@
 
 **Deux VM Debian 13 · VirtualBox · 4 Go de RAM conseillés par VM**
 
-[Accueil du projet](../README.md) · [Fiche PDF](Fiche_installation.pdf) · [Fiche Word modifiable](Fiche_installation.docx)
+[Accueil du projet](../README.md) · [Fiche PDF](Fiche_installation.pdf) 
 
 </div>
 
