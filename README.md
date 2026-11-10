@@ -84,8 +84,7 @@ Les adresses écrites sur le schéma sont des **exemples de configuration**. Le 
 │   └── deploiement.jpg            Notre diagramme de déploiement
 ├── installation/
 │   ├── README.md                  Notice d’installation en ligne
-│   ├── Fiche_installation.pdf      Fiche illustrée
-│   └── Fiche_installation.docx     Source modifiable de la fiche
+│   └── Fiche_installation.pdf      Fiche illustrée
 ├── src/
 │   ├── carrefour/                 Fichiers du ZIP Carrefour
 │   └── vehicule/                  Fichier du ZIP Véhicule
